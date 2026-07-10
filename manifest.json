@@ -1,0 +1,24 @@
+{
+  "name": "Divina Italia — Stitch Edition",
+  "short_name": "Divina Italia v2",
+  "description": "Sistema profesional de gestión de cocina con mermas, escandallos y analítica",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f0a04",
+  "theme_color": "#0f0a04",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["productivity", "food"]
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin Conexión — Divina Italia</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #0f0a04;
+            color: #e8d5b0;
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            padding: 32px;
+            max-width: 400px;
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-family: 'Bebas Neue', serif;
+            font-size: 2rem;
+            color: #c9a96e;
+            letter-spacing: 2px;
+            margin: 0 0 16px;
+        }
+        p {
+            color: #8e7d5d;
+            line-height: 1.6;
+            margin: 0 0 32px;
+        }
+        button {
+            background: linear-gradient(135deg, #8B6914 0%, #c9a96e 100%);
+            color: #0f0a04;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-family: 'Bebas Neue', serif;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📡</div>
+        <h1>SIN CONEXIÓN</h1>
+        <p>No hay conexión a internet. Los datos que hayas introducido se guardarán cuando vuelva la conexión.</p>
+        <button onclick="location.reload()">🔄 REINTENTAR</button>
+    </div>
+</body>
+</html>

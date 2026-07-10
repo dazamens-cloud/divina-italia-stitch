@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Divina Italia — Stitch Edition</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f0a04">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Divina Italia">
+    <meta name="description" content="Sistema profesional de gestión de cocina — Divina Italia El Charco">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HOME -->
+    <div id="screenHome" class="screen active">
+        <div class="hero-canario">
+            <div class="hero-overlay"></div>
+            <img src="icons/logo-hero.png" alt="Divina Italia El Charco" class="logo-principal">
+        </div>
+        <div class="grid-stats">
+            <div class="stat-card" onclick="irA('screenCocina')" role="button">
+                <div class="stat-icon">🍳</div>
+                <div class="stat-label">Cocina</div>
+                <div class="stat-desc">REGISTRO</div>
+            </div>
+            <div class="stat-card" onclick="irA('screenStock')" role="button">
+                <div class="stat-icon">📦</div>
+                <div class="stat-label">Almacén</div>
+                <div class="stat-desc">STOCK</div>
+            </div>
+            <div class="stat-card" onclick="irA('screenCompras')" role="button">
+                <div class="stat-icon">🛒</div>
+                <div class="stat-label">Compras</div>
+                <div class="stat-desc">PEDIDOS</div>
+            </div>
+            <div class="stat-card" onclick="irA('screenMermas')" role="button">
+                <div class="stat-icon">🗑️</div>
+                <div class="stat-label">Mermas</div>
+                <div class="stat-desc">RESIDUOS</div>
+            </div>
+            <div class="stat-card" onclick="irA('screenDashboard')" role="button">
+                <div class="stat-icon">📊</div>
+                <div class="stat-label">Resumen</div>
+                <div class="stat-desc">ANALÍTICA</div>
+            </div>
+            <div class="stat-card" onclick="irA('screenProductos')" role="button">
+                <div class="stat-icon">📚</div>
+                <div class="stat-label">Productos</div>
+                <div class="stat-desc">BIBLIOTECA</div>
+            </div>
+            <div class="stat-card" onclick="irA('screenPrecios')" role="button">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">Precios</div>
+                <div class="stat-desc">ALBARANES</div>
+            </div>
+            <div class="stat-card" onclick="irA('screenCarta')" role="button">
+                <div class="stat-icon">🍽️</div>
+                <div class="stat-label">Carta</div>
+                <div class="stat-desc">ESCANDALLOS</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COCINA (sin cambios) -->
+    <div id="screenCocina" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Registro de Cocina</h2>
+            <p style="color:var(--muted)">Elabora y registra ingredientes</p>
+        </div>
+        <div class="screen-content">
+            <div class="card">
+                <label>🍳 Selecciona la preparación:</label>
+                <div id="listaElaboraciones" class="grid-stats"></div>
+            </div>
+            <input type="file" id="inputFotoCocina" accept="image/*" style="display:none" onchange="onFotoCocinaSeleccionada(event)">
+            <div id="listaIngredientes"></div>
+            <div class="action-buttons">
+                <button id="btnGuardarSesion" class="btn-save hidden" onclick="guardarSesion()">
+                    💾 GUARDAR EN REGISTROS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STOCK (sin cambios) -->
+    <div id="screenStock" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Control de Stock</h2>
+            <p style="color:var(--muted)">Registro semanal de elaboraciones</p>
+        </div>
+        <div class="screen-content">
+            <div class="card">
+                <label>📦 Elaboración:</label>
+                <select id="selectStockElab">
+                    <option value="">Selecciona elaboración...</option>
+                </select>
+                <div class="grid-2">
+                    <input type="text" id="inputStockCantidad" placeholder="Cantidad">
+                    <input type="text" id="inputStockUnidad" placeholder="Unidad (kg, ud...)">
+                </div>
+                <input type="text" id="inputStockNotas" placeholder="Notas (opcional)">
+                <button id="btnAddStock" class="btn-save" onclick="agregarLineaStock()">
+                    ➕ AÑADIR A LA LISTA
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="flex-between mb">
+                    <label style="margin:0;color:var(--gold);font-weight:700">📅 Semana</label>
+                    <select id="selectorSemanasStock" onchange="cambiarSemanaStock(this.value)" style="width:auto;min-width:140px;margin-bottom:0">
+                        <option>Cargando...</option>
+                    </select>
+                </div>
+                <div id="stockContainer">
+                    <p style="color:var(--muted);text-align:center">Cargando stock...</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="btnGuardarTodoStock" class="btn-save hidden" onclick="guardarTodoStock()">
+                    💾 GUARDAR STOCK
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="flex-between">
+                    <label style="margin:0">⚙️ Elaboraciones</label>
+                    <button id="btnToggleGestion" onclick="toggleGestionElaboraciones()" class="btn-secondary">
+                        ⚙️ GESTIONAR
+                    </button>
+                </div>
+                <div id="panelGestionElaboraciones" style="display:none;margin-top:var(--spacing-md)">
+                    <button onclick="mostrarFormNuevoStockItem()" class="btn-secondary" style="width:100%;margin-bottom:var(--spacing-md)">
+                        ➕ NUEVA ELABORACIÓN
+                    </button>
+                    <div id="formNuevoStockItem" style="display:none;background:var(--surface2);border:1px solid var(--gold);border-radius:var(--radius-md);padding:var(--spacing-lg);gap:var(--spacing-md);flex-direction:column">
+                        <input type="text" id="niNombre" placeholder="Nombre de la elaboración">
+                        <select id="niCategoria">
+                            <option value="">Categoría...</option>
+                            <option value="Salsas">Salsas</option>
+                            <option value="Raviolis">Raviolis</option>
+                            <option value="Salsas Raviolis">Salsas Raviolis</option>
+                            <option value="Pastas">Pastas</option>
+                            <option value="Carnes">Carnes</option>
+                            <option value="Postres">Postres</option>
+                            <option value="General">General</option>
+                        </select>
+                        <div class="grid-2">
+                            <button class="btn-cancelar" onclick="ocultarFormNuevoStockItem()">CANCELAR</button>
+                            <button id="btnGuardarNuevoStockItem" class="btn-save" onclick="guardarNuevoStockItem()">GUARDAR</button>
+                        </div>
+                    </div>
+                    <div id="listaStockItems" style="margin-top:var(--spacing-md)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPRAS (sin cambios significativos) -->
+    <div id="screenCompras" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Compras</h2>
+            <p style="color:var(--muted)">Registra pedidos a proveedores</p>
+        </div>
+        <div class="screen-content">
+            <div class="card">
+                <label>🏪 Proveedor:</label>
+                <select id="selectProveedor" onchange="onProveedorChange()">
+                    <option value="">Selecciona proveedor...</option>
+                    <option value="Matteo Comit">Matteo Comit</option>
+                    <option value="Tías Fruit">Tías Fruit</option>
+                    <option value="Chacon">Chacon</option>
+                    <option value="ReyesyBouzon">Reyes y Bouzon</option>
+                    <option value="Canarymeat">Canarymeat</option>
+                    <option value="Pescasol">Pescasol</option>
+                    <option value="Roper">Roper</option>
+                    <option value="Ortidal">Ortidal</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <div id="otroProveedorContainer" style="display:none;margin-top:var(--spacing-md)">
+                    <input type="text" id="otroProveedorNombre" placeholder="✍️ Nombre del proveedor..." oninput="onOtroProveedorInput()">
+                    <p id="otroProveedorHint" style="color:var(--muted);font-size:0.75rem;margin:var(--spacing-xs) 0 0;display:none">
+                        💡 Pulsa Añadir para guardarlo como proveedor permanente
+                    </p>
+                    <button id="btnGuardarOtroProveedor" onclick="guardarNuevoProveedor()" style="display:none;margin-top:var(--spacing-md)" class="btn-secondary">
+                        ＋ AÑADIR A LA LISTA
+                    </button>
+                </div>
+            </div>
+
+            <div id="formPedidoContainer" class="card" style="display:none">
+                <label>📦 Añadir producto:</label>
+                <input type="search" id="busquedaProdPedido" placeholder="🔍 Buscar en biblioteca..." oninput="filtrarProductosPedido()" autocomplete="off">
+                <div id="sugerenciasPedido" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;max-height:200px;overflow-y:auto;margin-top:calc(var(--spacing-md)*-1)"></div>
+                <input type="text" id="inputProductoPedido" placeholder="Nombre del producto" style="margin-top:var(--spacing-md)">
+                <div class="grid-2">
+                    <input type="text" id="inputCantidadPedido" placeholder="Cantidad">
+                    <input type="text" id="inputUnidadPedido" placeholder="Unidad">
+                </div>
+                <button class="btn-save" onclick="agregarLineaPedido()">
+                    ➕ AÑADIR AL PEDIDO
+                </button>
+            </div>
+
+            <div id="resumenPedidoContainer" class="card" style="display:none">
+                <label>🛒 Pedido actual:</label>
+                <div id="lineasPedido">
+                    <p style="color:var(--muted);text-align:center">Sin líneas añadidas</p>
+                </div>
+                <button class="btn-save" style="width:100%" onclick="guardarPedido()">
+                    💾 GUARDAR Y ENVIAR WHATSAPP
+                </button>
+                <button onclick="limpiarPedido()" class="btn-secondary" style="width:100%;margin-top:var(--spacing-md)">
+                    🗑 VACIAR PEDIDO
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="grid-2 mb">
+                    <button class="tab-compras btn-save" data-tab="pedidos" onclick="cambiarTabCompras('pedidos')">
+                        📋 PEDIDOS ENVIADOS
+                    </button>
+                    <button class="tab-compras btn-secondary" data-tab="albaranes" onclick="cambiarTabCompras('albaranes')">
+                        📦 ALBARANES RECIBIDOS
+                    </button>
+                </div>
+
+                <div id="panelPedidosRealizados">
+                    <div class="flex-between mb">
+                        <label style="margin:0;color:var(--gold);font-weight:700">Últimos 7 días</label>
+                        <button onclick="cargarPedidosRealizados()" class="btn-secondary">🔄</button>
+                    </div>
+                    <div id="listaPedidosRealizados">
+                        <p style="color:var(--muted);text-align:center;font-size:0.85rem">Cargando...</p>
+                    </div>
+                </div>
+
+                <div id="panelAlbaranesRecibidos" style="display:none">
+                    <div style="margin-bottom:var(--spacing-md)">
+                        <label style="color:var(--muted);font-size:0.8rem;display:block;margin-bottom:var(--spacing-sm)">
+                            📅 VER ALBARANES DEL DÍA:
+                        </label>
+                        <div class="grid-2" style="gap:var(--spacing-sm);align-items:center">
+                            <input type="date" id="filtroFechaAlbaran" onchange="cargarAlbaranesRecibidos()">
+                            <button onclick="cargarAlbaranesRecibidos()" class="btn-secondary">🔄 RECARGAR</button>
+                        </div>
+                        <div class="grid-2" style="gap:var(--spacing-sm);margin-top:var(--spacing-md)">
+                            <button onclick="irFechaAlbaran(-1)" class="btn-secondary">◀ ANTERIOR</button>
+                            <button onclick="irFechaAlbaranHoy()" class="btn-save">HOY</button>
+                            <button onclick="irFechaAlbaran(1)" class="btn-secondary">SIGUIENTE ▶</button>
+                        </div>
+                    </div>
+                    <div class="flex-between mb">
+                        <label style="margin:0;color:var(--gold);font-weight:700;font-size:0.85rem" id="labelFechaAlbaran">ALBARANES DEL DÍA</label>
+                    </div>
+                    <div id="listaAlbaranesRecibidos">
+                        <p style="color:var(--muted);text-align:center;font-size:0.85rem">
+                            Selecciona una fecha para ver los albaranes
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✨ MERMAS (NUEVA) ✨ -->
+    <div id="screenMermas" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Gestión de Mermas</h2>
+            <p style="color:var(--muted)">Registra pérdidas y desperdicio de productos</p>
+        </div>
+        <div class="screen-content">
+            <div class="card">
+                <label>📦 Producto:</label>
+                <input type="search" id="busquedaMermas" placeholder="🔍 Buscar en biblioteca..." oninput="filtrarProductosMermas()" autocomplete="off">
+                <div id="sugerenciasMermas" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;max-height:200px;overflow-y:auto;margin-top:calc(var(--spacing-md)*-1)"></div>
+                <input type="text" id="inputProductoMerma" placeholder="Nombre del producto">
+                <div class="grid-2">
+                    <input type="number" id="inputCantidadMerma" placeholder="Cantidad" step="0.1" min="0">
+                    <input type="text" id="inputUnidadMerma" placeholder="Unidad (kg, ud...)">
+                </div>
+                <select id="selectMotivMerma">
+                    <option value="">Motivo de la merma...</option>
+                    <option value="Caducidad">⏰ Caducidad</option>
+                    <option value="Deterioro">🧯 Deterioro</option>
+                    <option value="Rotura">💔 Rotura</option>
+                    <option value="Error">❌ Error de preparación</option>
+                    <option value="Otro">❓ Otro</option>
+                </select>
+                <input type="text" id="inputNotasMerma" placeholder="Notas (opcional)">
+                <button class="btn-save" onclick="agregarLineaMerma()">
+                    ➕ REGISTRAR MERMA
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="flex-between mb">
+                    <label style="margin:0;color:var(--gold);font-weight:700">📅 Hoy</label>
+                    <button onclick="cargarMermasHoy()" class="btn-secondary">🔄</button>
+                </div>
+                <div id="contenedorMermas">
+                    <p style="color:var(--muted);text-align:center">Cargando mermas del día...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <label style="color:var(--gold);font-weight:700;display:block;margin-bottom:var(--spacing-md)">
+                    💰 RESUMEN DE PÉRDIDAS
+                </label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-lg)">
+                    <div style="background:var(--surface2);padding:var(--spacing-lg);border-radius:var(--radius-md);border:1px solid var(--border)">
+                        <div style="color:var(--muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:var(--spacing-xs)">Total estimado</div>
+                        <div style="font-size:1.8rem;font-weight:700;color:var(--error)" id="totalMermasEuros">€0.00</div>
+                    </div>
+                    <div style="background:var(--surface2);padding:var(--spacing-lg);border-radius:var(--radius-md);border:1px solid var(--border)">
+                        <div style="color:var(--muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:var(--spacing-xs)">Ítems registrados</div>
+                        <div style="font-size:1.8rem;font-weight:700;color:var(--gold)" id="totalMermasItems">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD (mejorado) -->
+    <div id="screenDashboard" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Resumen Semanal</h2>
+            <p style="color:var(--muted)">Analítica y tendencias</p>
+        </div>
+        <div class="screen-content">
+            <div class="card" id="dashContent">
+                <p style="color:var(--muted);text-align:center">Cargando analíticas...</p>
+            </div>
+
+            <div class="card">
+                <label style="color:var(--gold);font-weight:700;display:block;margin-bottom:var(--spacing-md)">
+                    ⭐ INGENIERÍA DE MENÚ
+                </label>
+                <p style="color:var(--muted);font-size:0.9rem;line-height:1.5;margin-bottom:var(--spacing-md)">
+                    Análisis de popularidad vs. rentabilidad de platos.
+                </p>
+                <div id="ingenieriaMenuContent">
+                    <p style="color:var(--muted);text-align:center">Cargando datos...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <label style="color:var(--gold);font-weight:700;display:block;margin-bottom:var(--spacing-md)">
+                    💰 ALERTAS DE CAMBIO DE PRECIO
+                </label>
+                <div id="alertasPreciosContainer">
+                    <p style="color:var(--muted);text-align:center;font-size:0.85rem">Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTOS (sin cambios) -->
+    <div id="screenProductos" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Biblioteca</h2>
+            <p style="color:var(--muted)">Catálogo de productos</p>
+        </div>
+        <div class="screen-content">
+            <input type="search" id="busquedaProd" placeholder="🔍 Buscar producto..." onkeyup="filtrarProductos()">
+            <button class="btn-secondary" style="font-size:1rem;border:1px solid var(--gold)" onclick="mostrarFormNuevoProducto()">
+                ➕ NUEVO PRODUCTO
+            </button>
+
+            <div class="card" id="formNuevoProducto" style="display:none">
+                <label style="color:var(--gold);font-weight:700;display:block;margin-bottom:var(--spacing-md)">
+                    🆕 Añadir producto
+                </label>
+                <input id="npNombre" placeholder="Nombre del producto *" aria-label="Nombre">
+                <input id="npUnidad" placeholder="Unidad (kg, ud, lt...)" aria-label="Unidad">
+                <select id="npProveedor" aria-label="Proveedor">
+                    <option value="">— Proveedor (opcional) —</option>
+                    <option value="Matteo Comit">Matteo Comit</option>
+                    <option value="Tías Fruit">Tías Fruit</option>
+                    <option value="Chacon">Chacon</option>
+                    <option value="ReyesyBouzon">Reyes y Bouzon</option>
+                    <option value="Canarymeat">Canarymeat</option>
+                    <option value="Pescasol">Pescasol</option>
+                    <option value="Roper">Roper</option>
+                    <option value="Ortidal">Ortidal</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <input id="npCodigo" placeholder="Código de barras (opcional)" aria-label="Código">
+                <div style="margin-top:var(--spacing-md)">
+                    <label style="color:var(--muted);font-size:0.85rem;display:block;margin-bottom:var(--spacing-sm)">
+                        📸 FOTO DEL PRODUCTO (OPCIONAL)
+                    </label>
+                    <div class="grid-2">
+                        <button onclick="abrirCamaraNP()" class="btn-secondary">
+                            📷 CÁMARA
+                        </button>
+                        <button onclick="abrirArchivosNP()" class="btn-secondary">
+                            🖼 ARCHIVO
+                        </button>
+                    </div>
+                    <input type="file" id="inputFotoNP_camara" accept="image/*" capture="environment" style="display:none" onchange="onFotoNPSeleccionada(event)">
+                    <input type="file" id="inputFotoNP_archivo" accept="image/*" style="display:none" onchange="onFotoNPSeleccionada(event)">
+                    <div id="previewFotoNP" style="margin-top:var(--spacing-md);display:none">
+                        <img id="imgPreviewNP" style="width:100%;max-height:160px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border)">
+                        <button onclick="quitarFotoNP()" class="btn-secondary" style="width:100%;margin-top:var(--spacing-md)">
+                            ✕ QUITAR FOTO
+                        </button>
+                    </div>
+                </div>
+                <div class="grid-2" style="margin-top:var(--spacing-lg)">
+                    <button class="btn-save" onclick="guardarNuevoProducto()">💾 GUARDAR</button>
+                    <button onclick="ocultarFormNuevoProducto()" class="btn-cancelar">CANCELAR</button>
+                </div>
+            </div>
+
+            <div id="listaProductos" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <!-- PRECIOS (sin cambios significativos) -->
+    <div id="screenPrecios" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Precios</h2>
+            <p style="color:var(--muted)">Albaranes y food cost</p>
+        </div>
+        <div class="screen-content">
+            <div class="card">
+                <label style="color:var(--gold);font-weight:700;display:block;margin-bottom:var(--spacing-md)">
+                    📋 REGISTRAR ALBARÁN
+                </label>
+                <div style="background:var(--surface2);border-radius:var(--radius-md);padding:var(--spacing-md);margin-bottom:var(--spacing-md)">
+                    <p style="color:var(--text);font-size:0.9rem;margin-bottom:var(--spacing-md);line-height:1.5">
+                        <b>Paso 1 —</b> Copia el prompt, ve a Claude.ai o ChatGPT,
+                        sube la foto del albarán junto al prompt y copia el JSON que te devuelva.
+                    </p>
+                    <button id="btnVerPrompt" onclick="mostrarPromptAlbaran()" class="btn-secondary" style="width:100%">
+                        👁 VER PROMPT PARA LA IA
+                    </button>
+                </div>
+
+                <div id="panelPromptAlbaran" style="display:none;margin-bottom:var(--spacing-md)">
+                    <textarea id="textareaPrompt" readonly style="width:100%;height:200px;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:var(--spacing-md);border-radius:var(--radius-md);font-size:0.75rem;font-family:monospace;resize:none;line-height:1.4;margin-bottom:var(--spacing-md)"></textarea>
+                    <button id="btnCopiarPrompt" onclick="copiarPrompt()" class="btn-secondary" style="width:100%">
+                        📋 COPIAR PROMPT
+                    </button>
+                </div>
+
+                <div style="background:var(--surface2);border-radius:var(--radius-md);padding:var(--spacing-md)">
+                    <p style="color:var(--text);font-size:0.9rem;margin-bottom:var(--spacing-md);line-height:1.5">
+                        <b>Paso 2 —</b> Pega aquí el JSON que te ha devuelto la IA:
+                    </p>
+                    <textarea id="inputTextoAlbaran" placeholder='Pega el JSON aquí. Ejemplo:&#10;{&#10;  "proveedor": "Matteo Comit",&#10;  "fechaEntrega": "18/04/2026",&#10;  "lineas": [&#10;    { "producto": "Carne picada", "cantidad": 5, "unidad": "kg", "precioUnit": 4.20 }&#10;  ]&#10;}' style="width:100%;height:160px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:var(--spacing-md);border-radius:var(--radius-md);font-size:0.8rem;font-family:monospace;resize:none;line-height:1.4;margin-bottom:var(--spacing-md)"></textarea>
+                    <button class="btn-save" onclick="procesarTextoAlbaran()" style="width:100%">
+                        ▶ PROCESAR ALBARÁN
+                    </button>
+                </div>
+            </div>
+
+            <div id="albaranResultContainer" style="display:none" class="card">
+                <div class="flex-between mb">
+                    <label style="color:var(--gold);font-weight:700;margin:0">✅ LÍNEAS DETECTADAS</label>
+                    <button onclick="añadirLineaAlbaranManual()" class="btn-secondary" style="font-size:0.8rem">➕ AÑADIR</button>
+                </div>
+
+                <div style="margin-bottom:var(--spacing-md)">
+                    <label style="color:var(--muted);font-size:0.8rem;display:block;margin-bottom:var(--spacing-sm)">
+                        📅 FECHA DE ENTREGA DEL ALBARÁN:
+                    </label>
+                    <input type="date" id="albaranFechaEntrega">
+                </div>
+
+                <select id="albaranProveedor" style="margin-bottom:var(--spacing-md)">
+                    <option value="">— CONFIRMA EL PROVEEDOR —</option>
+                    <option value="Matteo Comit">Matteo Comit</option>
+                    <option value="Tías Fruit">Tías Fruit</option>
+                    <option value="Chacon">Chacon</option>
+                    <option value="ReyesyBouzon">Reyes y Bouzon</option>
+                    <option value="Canarymeat">Canarymeat</option>
+                    <option value="Pescasol">Pescasol</option>
+                    <option value="Roper">Roper</option>
+                    <option value="Ortidal">Ortidal</option>
+                    <option value="Otro">Otro</option>
+                </select>
+
+                <p style="color:var(--muted);font-size:0.8rem;margin-bottom:var(--spacing-md);line-height:1.4">
+                    Revisa y edita. El campo <b style="color:var(--gold)">€/ud</b> actualiza
+                    los precios para el food cost. Si no lo sabes, déjalo vacío.
+                </p>
+
+                <div id="albaranLineas"></div>
+
+                <div class="grid-2" style="margin-top:var(--spacing-lg)">
+                    <button onclick="descartarAlbaran()" class="btn-cancelar">DESCARTAR</button>
+                    <button id="btnConfirmarAlbaran" class="btn-save" onclick="confirmarAlbaran()">GUARDAR</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex-between mb">
+                    <label style="margin:0;color:var(--gold);font-weight:700">📋 PRECIOS ACTUALES</label>
+                    <button onclick="cargarPrecios()" class="btn-secondary">🔄</button>
+                </div>
+                <input type="search" id="busquedaPrecios" placeholder="🔍 Buscar producto..." oninput="filtrarPrecios()">
+                <div id="listaPreciosContainer">
+                    <p style="color:var(--muted);text-align:center">Cargando...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex-between mb">
+                    <label style="margin:0;color:var(--gold);font-weight:700">🔗 ALIAS DE PRODUCTOS</label>
+                    <button onclick="cargarGestionAlias()" class="btn-secondary">🔄</button>
+                </div>
+                <p style="color:var(--muted);font-size:0.8rem;margin-bottom:var(--spacing-md);line-height:1.5">
+                    Vincula nombres del albarán con los de tu biblioteca. Se crean solos al confirmar un albarán.
+                </p>
+                <div id="listaAliasGestion">
+                    <p style="color:var(--muted);text-align:center;font-size:0.85rem">Pulsa 🔄 para cargar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARTA (sin cambios) -->
+    <div id="screenCarta" class="screen">
+        <div class="app-header">
+            <img src="icons/logo-hero.png" class="logo-small" onclick="irA('screenHome')" alt="Volver" role="button">
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Carta</h2>
+            <p style="color:var(--muted)">Escandallos, food cost y márgenes</p>
+        </div>
+        <div class="screen-content">
+            <button class="btn-secondary" style="font-size:1rem;border:1px solid var(--gold);margin-bottom:var(--spacing-lg)" onclick="mostrarFormNuevoPlato()">
+                🍽️ NUEVO PLATO
+            </button>
+
+            <div class="card" id="formNuevoPlato" style="display:none">
+                <label style="color:var(--gold);font-weight:700;display:block;margin-bottom:var(--spacing-md)">🆕 AÑADIR PLATO</label>
+                <input id="npNombrePlato" placeholder="Nombre del plato *">
+                <select id="npCategoriaplato">
+                    <option value="">Categoría...</option>
+                    <option value="Entrantes">Entrantes</option>
+                    <option value="Para Picar">Para Picar</option>
+                    <option value="Ensaladas">Ensaladas</option>
+                    <option value="Pastas">Pastas</option>
+                    <option value="Raviolis">Raviolis</option>
+                    <option value="Carnes">Carnes</option>
+                    <option value="Pescados">Pescados</option>
+                    <option value="Hamburguesas">Hamburguesas</option>
+                    <option value="Pizzas">Pizzas</option>
+                    <option value="Postres">Postres</option>
+                </select>
+                <input id="npPVP" type="number" step="0.01" placeholder="PVP (€ con IVA, opcional)">
+                <div class="grid-2" style="margin-top:var(--spacing-lg)">
+                    <button class="btn-save" onclick="guardarNuevoPlato()">💾 GUARDAR</button>
+                    <button onclick="ocultarFormNuevoPlato()" class="btn-cancelar">CANCELAR</button>
+                </div>
+            </div>
+
+            <div class="flex" style="gap:var(--spacing-md);margin-bottom:var(--spacing-lg)">
+                <input type="search" id="busquedaPlatos" placeholder="🔍 Buscar plato..." oninput="filtrarPlatos()" style="flex:1;margin-bottom:0">
+                <select id="filtroCategoriaCarta" onchange="filtrarPlatos()" style="width:auto;min-width:110px;margin-bottom:0">
+                    <option value="">Todas</option>
+                    <option value="Para Picar">Para Picar</option>
+                    <option value="Entrantes">Entrantes</option>
+                    <option value="Ensaladas">Ensaladas</option>
+                    <option value="Pastas">Pastas</option>
+                    <option value="Raviolis">Raviolis</option>
+                    <option value="Carnes">Carnes</option>
+                    <option value="Pescados">Pescados</option>
+                    <option value="Hamburguesas">Hamburguesas</option>
+                    <option value="Pizzas">Pizzas</option>
+                    <option value="Postres">Postres</option>
+                </select>
+            </div>
+
+            <div id="listaPlatos">
+                <p style="color:var(--muted);text-align:center">Cargando carta...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALES (sin cambios) -->
+    <div id="modalEditarProducto" class="modal-overlay">
+        <div class="modal-box">
+            <h2 class="modal-title">✏️ EDITAR PRODUCTO</h2>
+            <input type="hidden" id="epNombreOriginal">
+            <input type="text" id="epNombre" placeholder="Nombre del producto">
+            <input type="text" id="epUnidad" placeholder="Unidad (kg, ud...)">
+            <select id="epProveedor">
+                <option value="">Proveedor...</option>
+                <option value="Matteo Comit">Matteo Comit</option>
+                <option value="Tías Fruit">Tías Fruit</option>
+                <option value="Chacon">Chacon</option>
+                <option value="ReyesyBouzon">Reyes y Bouzon</option>
+                <option value="Canarymeat">Canarymeat</option>
+                <option value="Pescasol">Pescasol</option>
+                <option value="Roper">Roper</option>
+                <option value="Ortidal">Ortidal</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <input type="text" id="epCodigo" placeholder="Código (opcional)">
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="cerrarModalEditarProducto()">CANCELAR</button>
+                <button id="btnGuardarEdicionProducto" class="btn-save" onclick="guardarEdicionProducto()">GUARDAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEditarStockItem" class="modal-overlay">
+        <div class="modal-box">
+            <h2 class="modal-title">✏️ EDITAR ELABORACIÓN</h2>
+            <input type="hidden" id="eiNombreOriginal">
+            <input type="text" id="eiNombre" placeholder="Nombre de la elaboración">
+            <select id="eiCategoria">
+                <option value="">Categoría...</option>
+                <option value="Salsas">Salsas</option>
+                <option value="Raviolis">Raviolis</option>
+                <option value="Salsas Raviolis">Salsas Raviolis</option>
+                <option value="Pastas">Pastas</option>
+                <option value="Carnes">Carnes</option>
+                <option value="Postres">Postres</option>
+                <option value="General">General</option>
+            </select>
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="cerrarModalEditarStockItem()">CANCELAR</button>
+                <button id="btnGuardarEdicionStockItem" class="btn-save" onclick="guardarEdicionStockItem()">GUARDAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEscandallo" class="modal-overlay">
+        <div class="modal-box" style="max-width:500px;max-height:90vh;overflow-y:auto">
+            <h2 class="modal-title">🍽️ <span id="modalEscNombre">ESCANDALLO</span></h2>
+            <input type="hidden" id="modalEscPlatoKey">
+            <p style="color:var(--muted);font-size:0.8rem;margin-bottom:var(--spacing-md);line-height:1.4">
+                Busca ingredientes (productos de la biblioteca) o elaboraciones (salsas, masas...)
+                y ajusta los gramajes.
+            </p>
+            <div style="position:relative">
+                <input type="search" id="busqIngEsc" placeholder="🔍 Buscar ingrediente o elaboración..." oninput="filtrarIngEscandallo()" autocomplete="off">
+                <div id="sugIngEsc" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;max-height:200px;overflow-y:auto;margin-top:calc(var(--spacing-md)*-1)"></div>
+            </div>
+            <div id="lineasEscandallo" style="margin-top:var(--spacing-md);max-height:320px;overflow-y:auto"></div>
+            <div class="modal-buttons" style="margin-top:var(--spacing-md)">
+                <button class="btn-cancelar" onclick="cerrarModalEscandallo()">CANCELAR</button>
+                <button id="btnGuardarEsc" class="btn-save" onclick="guardarEscandalloModal()">GUARDAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAlias" class="modal-overlay">
+        <div class="modal-box" style="max-width:480px;max-height:85vh;overflow-y:auto">
+            <h2 class="modal-title">🔗 VINCULAR PRODUCTOS</h2>
+            <p style="color:var(--muted);font-size:0.85rem;line-height:1.5">
+                Estos productos del albarán no coinciden con tu biblioteca.
+                Vincúlalos para que la próxima vez se reconozcan solos.
+            </p>
+            <div id="listaAliasModal"></div>
+            <div class="modal-buttons" style="margin-top:var(--spacing-lg)">
+                <button class="btn-cancelar" onclick="cerrarModalAlias()">OMITIR</button>
+                <button class="btn-save" onclick="guardarAliasModal()">GUARDAR VÍNCULOS</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalRendimiento" class="modal-overlay">
+        <div class="modal-box">
+            <h2 class="modal-title">📊 <span id="modalRendNombre">RENDIMIENTO</span></h2>
+            <input type="hidden" id="modalRendElabKey">
+            <p style="color:var(--muted);font-size:0.85rem;line-height:1.5">
+                ¿Cuánto te ha salido de esta producción?
+                Esto actualiza el rendimiento real de la elaboración.
+            </p>
+            <div class="grid-2">
+                <div>
+                    <label style="color:var(--muted);font-size:0.8rem;display:block;margin-bottom:var(--spacing-xs)">Cantidad obtenida</label>
+                    <input type="number" id="modalRendCantidad" placeholder="Ej: 14.5" step="0.1" min="0">
+                </div>
+                <div>
+                    <label style="color:var(--muted);font-size:0.8rem;display:block;margin-bottom:var(--spacing-xs)">Unidad</label>
+                    <select id="modalRendUnidad">
+                        <option value="kg">kg</option>
+                        <option value="lt">lt</option>
+                        <option value="ud">ud (raciones)</option>
+                        <option value="g">g</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label style="color:var(--muted);font-size:0.8rem;display:block;margin-bottom:var(--spacing-xs)">Notas (opcional)</label>
+                <input type="text" id="modalRendNotas" placeholder="Ej: salió un poco más líquida">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="cerrarModalRendimiento()">OMITIR</button>
+                <button class="btn-save" onclick="guardarRendimiento()">GUARDAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS OVERLAY -->
+    <div id="successOverlay" class="success-overlay" role="alert" aria-live="assertive">
+        <div id="successIcon">✅</div>
+        <h2 id="successText">¡GUARDADO!</h2>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(function() { console.log('SW registrado'); })
+                .catch(function(err) { console.error('SW error:', err); });
+        }
+        history.replaceState({ screen: 'screenHome' }, '', '#screenHome');
+    </script>
+</body>
+</html>
